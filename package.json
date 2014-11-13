@@ -1,0 +1,28 @@
+{
+  "name": "fis-scaffold-kernel",
+  "version": "0.0.0",
+  "description": "fis-scaffold-kernel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiangshouding/fis-scaffold-kernel.git"
+  },
+  "keywords": [
+    "fis",
+    "scaffold"
+  ],
+  "author": "fansekey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xiangshouding/fis-scaffold-kernel/issues"
+  },
+  "homepage": "https://github.com/xiangshouding/fis-scaffold-kernel",
+  "dependencies": {
+    "debug": "^2.1.0",
+    "lodash": "2.4.1",
+    "unzip": "^0.1.11"
+  }
+}
