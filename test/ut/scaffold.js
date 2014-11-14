@@ -8,7 +8,7 @@ scaffold.download('fis-dev/fis-report-record@master', function (err, path) {
     if (err) throw err;
     console.log(path);
     var files = scaffold.util.find(path);
-    scaffold.deliver(files, path, './output', [
+    scaffold.deliver(files, path + '/fis-report-record.git', './output', [
         {
             reg: /.*\.js$/,
             release: '/js/$&'
