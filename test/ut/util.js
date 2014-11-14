@@ -5,11 +5,6 @@ var assert = chai.assert;
 var fs = require('fs');
 var _ = require('../../lib/util.js');
 
-//console.log(util.find('../../', null, /\.js/));
-
-//util.copy('/Users/shouding/Downloads/fisp-lsdiff-demo', '/Users/shouding/Downloads/test',null,null,true);
-
-
 describe('_.del', function () {
     var p = __dirname + '/.tmp';
     before(function () {

@@ -73,7 +73,6 @@ Scaffold.prototype.deliver = function (files, root, to, roadmap) {
                 if (isMatch) break;
             }
         }
-
         if (!isMatch) {
             release = file.replace(root, '');
         }

@@ -23,3 +23,21 @@ var Scaffold = require('../../');
 //        }
 //    ])
 //});
+
+describe('download', function () {
+    it ('download from github', function (done) {
+        var s = new Scaffold({
+            type: 'github'
+        });
+        this.timeout(5000);
+        s.download('xiangshouding/github-support-doc-type', function (err, path) {
+            expect(err).to.be.equal(null);
+            console.log(path);
+            done();
+        });
+    });
+
+    it ('download from gitlab', function () {
+
+    });
+});
