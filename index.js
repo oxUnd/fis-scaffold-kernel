@@ -9,6 +9,7 @@ function Scaffold (options) {
     this.util = require('./lib/util.js');
 }
 
+
 Scaffold.prototype._roadmap = function (roadmap) {
     var self = this;
     if (!this.isArray(roadmap)) {
