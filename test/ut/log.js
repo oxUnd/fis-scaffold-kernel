@@ -2,7 +2,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var assert = chai.assert;
 
-//
+var ob = require('catch-output');
+
 var fs = require('fs');
 
 var Log = require('../../lib/log.js');
@@ -25,6 +26,10 @@ describe('log new', function () {
 
 describe('log.notice', function () {
     it('to stdout', function () {
-        var log = new Log();
+        var ss = ob.catchOutput(function () {
+            var log = new Log();
+            log.notice('debug');
+        });
+        expect(ss.toString()).to.be.equal('[NOTICE]  debug\n');
     });
 });
