@@ -1,6 +1,8 @@
-var lodash = require('lodash');
 var util = require('util');
 var path = require('path');
+var glob = require('glob.js');
+var lodash = require('lodash');
+
 var log = require('./lib/log.js')();
 
 function Scaffold (options) {
@@ -19,8 +21,11 @@ Scaffold.prototype._roadmap = function (roadmap) {
     var map = {};
     roadmap.forEach(function (raw) {
         if (raw.reg && raw.release) {
-            if (!self.isRegExp(raw.reg)) {
+            if (!self.isRegExp(raw.reg) || !self.isString(raw.reg)) {
                 return;
+            }
+            if (self.isString(raw.reg)) {
+                raw.reg = glob.make(raw.reg);
             }
             map[raw.release] = raw.reg;
         }
