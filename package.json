@@ -24,6 +24,7 @@
     "debug": "^2.1.0",
     "glob.js": "^0.1.0",
     "lodash": "2.4.1",
+    "prompt": "^0.2.14",
     "unzip": "^0.1.11"
   },
   "devDependencies": {

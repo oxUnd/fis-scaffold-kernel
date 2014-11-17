@@ -1,4 +1,3 @@
-var util = require('util');
 var path = require('path');
 var glob = require('glob.js');
 var lodash = require('lodash');
@@ -10,28 +9,6 @@ function Scaffold (options) {
     this._options = lodash.merge({}, options);
     this.util = require('./lib/util.js');
 }
-
-
-Scaffold.prototype._roadmap = function (roadmap) {
-    var self = this;
-    if (!this.isArray(roadmap)) {
-        log.warn('roadmap must be a Array.');
-        return [];
-    }
-    var map = {};
-    roadmap.forEach(function (raw) {
-        if (raw.reg && raw.release) {
-            if (!self.isRegExp(raw.reg) || !self.isString(raw.reg)) {
-                return;
-            }
-            if (self.isString(raw.reg)) {
-                raw.reg = glob.make(raw.reg);
-            }
-            map[raw.release] = raw.reg;
-        }
-    });
-    return map;
-};
 
 Scaffold.prototype.download = function (id, cb) {
     log.notice('will download component id: ' + id);
@@ -45,11 +22,66 @@ Scaffold.prototype.download = function (id, cb) {
     }
     var request = new (require('./lib/'+type))(this._options);
     log.notice(type + ': download start');
-    request.download(id, cb || function(){});
+    request.download(id, cb);
 };
 
-Scaffold.prototype.prompt = function (id) {
+Scaffold.prototype.replace = function (path, map) {
+    var files = this.util.find(path);
+    var that = this;
+    files.forEach(function (file) {
+        //@TODO
+        var content = that.util.fs.readFileSync(file, {
+            encoding: 'utf-8'
+        });
+        that.map(map, function (v, k) {
+            var reg = new RegExp(that.util.escapeRegExp(k), 'g');
+            content = content.replace(reg, v);
+        });
+        //@TODO
+        that.util.fs.writeFileSync(file, content, {
+            encoding: 'utf-8'
+        })
+    });
+};
 
+Scaffold.prototype.prompt = function (path, schemas, cb) {
+    cb = this.isFunction(cb) ? cb : function () {};
+    if (!schemas) {
+        //@TODO
+        cb (new Error('need schemas.'));
+        return;
+    }
+    var prompt = require('prompt');
+    var that = this;
+
+    prompt.start();
+    prompt.get(schemas, function (err, result) {
+        if (!err) {
+            that.replace(path, result);
+        }
+        cb(err, path);
+    });
+};
+
+Scaffold.prototype._roadmap = function (roadmap) {
+    var self = this;
+    if (!this.isArray(roadmap)) {
+        log.warn('roadmap must be a Array.');
+        return [];
+    }
+    var map = [];
+    roadmap.forEach(function (raw) {
+        if (raw.reg) {
+            if (self.isString(raw.reg)) {
+                raw.reg = glob.make(raw.reg);
+            }
+            map.push({
+                reg: raw.reg,
+                release: (typeof raw.release == 'undefined') ? '$&' : raw.release
+            });
+        }
+    });
+    return map;
 };
 
 Scaffold.prototype.deliver = function (files, root, to, roadmap) {
@@ -60,32 +92,65 @@ Scaffold.prototype.deliver = function (files, root, to, roadmap) {
     var map = this._roadmap(roadmap);
 
     function _replaceDefine(match, release) {
-            return release.replace(/\$(\d+|&)/g, function (m, $1) {
-                var val = match[$1 == '&' ? 0 : $1];
-                return typeof val == 'undefined' ? '' : val;
-            });
+        return release.replace(/\$(\d+|&)/g, function (m, $1) {
+            var val = match[$1 == '&' ? 0 : $1];
+            return typeof val == 'undefined' ? '' : val;
+        });
     }
 
     for (var i = 0, len = files.length; i < len; i++) {
         var file = files[i];
         var release;
         var isMatch = false;
-        for (release in map) {
-            if (map.hasOwnProperty(release)) {
-                var reg = map[release];
-                file.replace(root, '').replace(reg, function () {
-                    release = _replaceDefine(arguments, release);
-                    isMatch = true;
-                });
-                if (isMatch) break;
-            }
+        var isRlease = true;
+        for (var j = 0; j < map.length; j++) {
+            var rule = map[j];
+            file.replace(root, '').replace(rule.reg, function () {
+                if (rule.release) {
+                    release = _replaceDefine(arguments, rule.release);
+                } else {
+                    isRlease = false;
+                }
+                isMatch = true;
+            });
+            if (isMatch) break;
         }
+
+        if (!isRlease) {
+            continue;
+        }
+
         if (!isMatch) {
             release = file.replace(root, '');
         }
         log.notice(path.join(to, release));
         this.util.move(file, path.join(to, release)); //copy
     }
+};
+
+Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
+    var that = this;
+    cb = !that.isFunction(cb) ? function () {} : cb;
+    that.download(id, function (err, path) {
+        if (err) {
+            cb(err);
+            return;
+        }
+        function deliver(files) {
+            that.deliver(files, path, to, roadmap);
+        }
+        //@TODO
+        if (that.isFunction(replacer)) {
+            replacer(deliver);
+        } else {
+            that.prompt(path, replacer, function (err, p) {
+                if (!err) {
+                    deliver(that.util.find(p));
+                }
+                cb(err);
+            });
+        }
+    });
 };
 
 lodash.extend(Scaffold.prototype, lodash);
