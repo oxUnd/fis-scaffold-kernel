@@ -49,6 +49,7 @@ Scaffold.prototype.download = function (id, cb) {
 };
 
 Scaffold.prototype.prompt = function (id) {
+
 };
 
 Scaffold.prototype.deliver = function (files, root, to, roadmap) {
