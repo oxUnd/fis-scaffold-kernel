@@ -17,8 +17,15 @@ describe('download', function () {
         });
     });
 
-    it ('download from gitlab', function () {
-        //gitlab ...
+    it ('download from gitlab', function (done) {
+        var s = new Scaffold({
+            type: 'gitlab'
+        });
+        s.download('fis-dev/fis-report-record', function (err, path) {
+            expect(err).to.be.equal(null);
+            console.log(path);
+            done();
+        });
     });
 });
 
