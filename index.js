@@ -2,13 +2,19 @@ var path = require('path');
 var glob = require('glob.js');
 var lodash = require('lodash');
 
-var log = require('./lib/log.js')();
+Object.defineProperty(global, 'log', {
+    writable: true,
+    enumerable: true,
+    value: {}
+});
 
 function Scaffold (options) {
     if (!(this instanceof Scaffold)) return new Scaffold(options);
     this._options = lodash.merge({
-        encoding: 'utf-8'
+        encoding: 'utf-8',
+        log: {}
     }, options);
+    log = require('./lib/log.js')(this._options.log.writer, this._options.log.level);
     this.util = require('./lib/util.js');
 }
 

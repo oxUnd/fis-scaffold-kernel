@@ -35,7 +35,7 @@ describe('release', function () {
             type: 'github'
         });
         var p = __dirname + '/tmp';
-        this.timeout(5000);
+        this.timeout(10000);
         s.release(
             'xiangshouding/glob.js',
             p,
