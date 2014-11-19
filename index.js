@@ -62,8 +62,6 @@ Scaffold.prototype.prompt = function (schemas, cb) {
         return;
     }
     var prompt = require('prompt');
-    var that = this;
-
     prompt.start();
     prompt.get(schemas, function (err, result) {
         cb(err, result);
