@@ -25,26 +25,36 @@ Scaffold.prototype.download = function (id, cb) {
     request.download(id, cb);
 };
 
-Scaffold.prototype.replace = function (path, map) {
+Scaffold.prototype.replace = function (path, map, use_prompt, callback) {
     var files = this.util.find(path);
     var that = this;
-    files.forEach(function (file) {
-        //@TODO
-        var content = that.util.fs.readFileSync(file, {
-            encoding: 'utf-8'
+    function cb (err, result) {
+        files.forEach(function (file) {
+            //@TODO
+            var content = that.util.fs.readFileSync(file, {
+                encoding: 'utf-8'
+            });
+            that.map(result, function (v, k) {
+                var reg = new RegExp(that.util.escapeRegExp(k), 'g');
+                content = content.replace(reg, v);
+            });
+            //@TODO
+            that.util.fs.writeFileSync(file, content, {
+                encoding: 'utf-8'
+            })
         });
-        that.map(map, function (v, k) {
-            var reg = new RegExp(that.util.escapeRegExp(k), 'g');
-            content = content.replace(reg, v);
+        callback && callback(err, path);
+    }
+    if (use_prompt) {
+        this.prompt(map, function (err, result) {
+            cb(err, result);
         });
-        //@TODO
-        that.util.fs.writeFileSync(file, content, {
-            encoding: 'utf-8'
-        })
-    });
+    } else {
+        cb(null, map);
+    }
 };
 
-Scaffold.prototype.prompt = function (path, schemas, cb) {
+Scaffold.prototype.prompt = function (schemas, cb) {
     cb = this.isFunction(cb) ? cb : function () {};
     if (!schemas) {
         //@TODO
@@ -56,10 +66,7 @@ Scaffold.prototype.prompt = function (path, schemas, cb) {
 
     prompt.start();
     prompt.get(schemas, function (err, result) {
-        if (!err) {
-            that.replace(path, result);
-        }
-        cb(err, path);
+        cb(err, result);
     });
 };
 
@@ -143,9 +150,9 @@ Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
         if (that.isFunction(replacer)) {
             replacer(deliver);
         } else {
-            that.prompt(path, replacer, function (err, p) {
+            that.replace(path, replacer, true, function (err) {
                 if (!err) {
-                    deliver(that.util.find(p));
+                    deliver(that.util.find(path));
                 }
                 cb(err);
             });
