@@ -50,24 +50,22 @@ Scaffold.prototype.replace = function (path, map, use_prompt, callback) {
         callback && callback(err, path);
     }
     if (use_prompt) {
-        this.prompt(map, function (err, result) {
-            cb(err, result);
-        });
+        this.prompt(map, cb);
     } else {
         cb(null, map);
     }
 };
 
-Scaffold.prototype.prompt = function (schemas, cb) {
+Scaffold.prototype.prompt = function (schema, cb) {
     cb = this.isFunction(cb) ? cb : function () {};
-    if (!schemas) {
+    if (!schema) {
         //@TODO
         cb (new Error('need schemas.'));
         return;
     }
     var prompt = require('prompt');
     prompt.start();
-    prompt.get(schemas, function (err, result) {
+    prompt.get(schema, function (err, result) {
         cb(err, result);
     });
 };
@@ -93,13 +91,10 @@ Scaffold.prototype._roadmap = function (roadmap) {
     return map;
 };
 
-Scaffold.prototype.deliver = function (files, root, to, roadmap) {
-    if (!this.isArray(files)) {
-        return;
-    }
+Scaffold.prototype.deliver = function (from, to, roadmap) {
     to = to || '';
     var map = this._roadmap(roadmap);
-
+    var files = this.util.find(from);
     function _replaceDefine(match, release) {
         return release.replace(/\$(\d+|&)/g, function (m, $1) {
             var val = match[$1 == '&' ? 0 : $1];
@@ -114,7 +109,7 @@ Scaffold.prototype.deliver = function (files, root, to, roadmap) {
         var isRlease = true;
         for (var j = 0; j < map.length; j++) {
             var rule = map[j];
-            file.replace(root, '').replace(rule.reg, function () {
+            file.replace(from, '').replace(rule.reg, function () {
                 if (rule.release) {
                     release = _replaceDefine(arguments, rule.release);
                 } else {
@@ -130,7 +125,7 @@ Scaffold.prototype.deliver = function (files, root, to, roadmap) {
         }
 
         if (!isMatch) {
-            release = file.replace(root, '');
+            release = file.replace(from, '');
         }
         log.notice(path.join(to, release));
         this.util.move(file, path.join(to, release)); //copy
@@ -145,16 +140,16 @@ Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
             cb(err);
             return;
         }
-        function deliver(files) {
-            that.deliver(files, path, to, roadmap);
+        function deliver(from) {
+            that.deliver(from, to, roadmap);
         }
         //@TODO
         if (that.isFunction(replacer)) {
-            replacer(deliver);
+            replacer(path, deliver);
         } else {
             that.replace(path, replacer, true, function (err) {
                 if (!err) {
-                    deliver(that.util.find(path));
+                    deliver(path);
                 }
                 cb(err);
             });
