@@ -24,6 +24,8 @@
     "debug": "^2.1.0",
     "fis-repo-client": "^0.1.14",
     "glob.js": "^0.1.0",
+    "iconv-lite": "^0.4.4",
+    "is-utf8": "^0.2.0",
     "lodash": "2.4.1",
     "prompt": "^0.2.14",
     "unzip": "^0.1.11"
