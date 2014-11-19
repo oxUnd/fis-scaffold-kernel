@@ -6,7 +6,9 @@ var log = require('./lib/log.js')();
 
 function Scaffold (options) {
     if (!(this instanceof Scaffold)) return new Scaffold(options);
-    this._options = lodash.merge({}, options);
+    this._options = lodash.merge({
+        encoding: 'utf-8'
+    }, options);
     this.util = require('./lib/util.js');
 }
 
@@ -31,17 +33,13 @@ Scaffold.prototype.replace = function (path, map, use_prompt, callback) {
     function cb (err, result) {
         files.forEach(function (file) {
             //@TODO
-            var content = that.util.fs.readFileSync(file, {
-                encoding: 'utf-8'
-            });
+            var content = that.util.read(file);
             that.map(result, function (v, k) {
                 var reg = new RegExp(that.util.escapeRegExp(k), 'g');
                 content = content.replace(reg, v);
             });
             //@TODO
-            that.util.fs.writeFileSync(file, content, {
-                encoding: 'utf-8'
-            })
+            that.util.write(file, content, that._options.encoding);
         });
         callback && callback(err, path);
     }
