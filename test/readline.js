@@ -3,6 +3,7 @@ var SS = require('..');
 var s = new SS({
     type: 'github',
     log: {
+        level: 0
     }
 });
 
