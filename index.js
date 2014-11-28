@@ -93,6 +93,7 @@ Scaffold.prototype._roadmap = function (roadmap) {
 
 Scaffold.prototype.deliver = function (from, to, roadmap) {
     to = to || '';
+    from = path.resolve(from);
     var map = this._roadmap(roadmap);
     var files = this.util.find(from);
     function _replaceDefine(match, release) {
@@ -101,6 +102,8 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
             return typeof val == 'undefined' ? '' : val;
         });
     }
+    
+    var count = 0; //移动文件的个数
 
     for (var i = 0, len = files.length; i < len; i++) {
         var file = files[i];
@@ -128,8 +131,11 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
             release = file.replace(from, '');
         }
         log.notice(path.join(to, release));
+        count++;
         this.util.move(file, path.join(to, release)); //copy
     }
+
+    return count;
 };
 
 Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
