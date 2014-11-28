@@ -1,14 +1,13 @@
 var SS = require('..');
 
 var s = new SS({
-    type: 'lights',
+    type: 'github',
     log: {
-        level: 0
     }
 });
 
 s.release(
-    'pc-demo',
+    'fis-components/sample@v0.0.1',
     '/Users/shouding/Downloads/glob_t',
     [],
     [{
