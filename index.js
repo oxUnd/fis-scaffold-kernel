@@ -18,7 +18,7 @@ function Scaffold (options) {
     this.util = require('./lib/util.js');
 }
 
-Scaffold.prototype.download = function (id, cb) {
+Scaffold.prototype.download = function (id, cb, progress) {
     log.notice('will download component id: ' + id);
     if (!id) {
         log.error(new Error('invalid, '));
@@ -30,7 +30,7 @@ Scaffold.prototype.download = function (id, cb) {
     }
     var request = new (require('./lib/'+type))(this._options);
     log.notice(type + ': download start');
-    request.download(id, cb);
+    request.download(id, cb, progress);
 };
 
 Scaffold.prototype.replace = function (path, map, use_prompt, callback) {
@@ -102,7 +102,7 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
             return typeof val == 'undefined' ? '' : val;
         });
     }
-    
+
     var count = 0; //移动文件的个数
 
     for (var i = 0, len = files.length; i < len; i++) {
