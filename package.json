@@ -1,6 +1,6 @@
 {
   "name": "fis-scaffold-kernel",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "fis-scaffold-kernel",
   "main": "index.js",
   "scripts": {
