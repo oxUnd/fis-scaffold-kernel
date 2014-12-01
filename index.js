@@ -1,6 +1,7 @@
 var path = require('path');
 var glob = require('glob.js');
 var lodash = require('lodash');
+var util = require('util');
 
 Object.defineProperty(global, 'log', {
     writable: true,
@@ -130,7 +131,7 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
         if (!isMatch) {
             release = file.replace(from, '');
         }
-        log.notice(path.join(to, release));
+        log.debug('release %s to %s.', path.join(from, release), path.join(to, release));
         count++;
         this.util.move(file, path.join(to, release)); //copy
     }
