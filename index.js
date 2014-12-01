@@ -146,8 +146,8 @@ Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
             cb(err);
             return;
         }
-        function deliver(from) {
-            that.deliver(from, to, roadmap);
+        function deliver() {
+            that.deliver(path, to, roadmap);
         }
         //@TODO
         if (that.isFunction(replacer)) {
@@ -155,7 +155,7 @@ Scaffold.prototype.release = function (id, to, replacer, roadmap, cb) {
         } else {
             that.replace(path, replacer, true, function (err) {
                 if (!err) {
-                    deliver(path);
+                    deliver();
                 }
                 cb(err);
             });

@@ -78,3 +78,44 @@ scaffold.release(
     }
 );
 ```
+or
+
+new replacer
+
+```javascript
+scaffold.release(
+    'xiangshouding/glob.js@master',
+    __dirname + '/output',
+    function (tmp_path, done) {
+        var files = scaffold.util.find(tmp_path);
+        scaffold.prompt([{name: 'glob'}], function (err, results) {
+            if (err) {
+                //if
+                    //done()
+                //else
+                    //scaffold.deliver(tmp_path, to, roadmap);
+                return;
+            }
+            
+            //replace...
+            //if
+                //done()
+            //else
+                //scaffold.deliver(tmp_path, to, roadmap);
+        });
+    },
+    [
+        {
+            reg: '*glob.js',
+            release: 'glob/$&'
+        },
+        {
+            reg: '*',
+            release: false
+        }
+    ],
+    function (err) {
+        console.log(err);
+    }
+);
+```
