@@ -105,7 +105,7 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
     }
 
     var count = 0; //移动文件的个数
-
+    var symlink = {};
     for (var i = 0, len = files.length; i < len; i++) {
         var file = files[i];
         var release;
@@ -133,9 +133,10 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
         }
         log.debug('release %s to %s.', path.join(from, release), path.join(to, release));
         count++;
-        this.util.move(file, path.join(to, release)); //copy
+        this.util.copy(file, path.join(to, release), null, null, true, symlink); //copy
     }
 
+    this.util.symlink(symlink);
     return count;
 };
 
