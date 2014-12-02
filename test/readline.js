@@ -1,16 +1,18 @@
 var SS = require('..');
 
 var s = new SS({
-    type: 'github',
+    type: 'gitlab',
     log: {
         level: 0
     }
 });
 
 s.release(
-    'fis-components/sample@v0.0.1',
+    'fex/node-runtime',
     '/Users/shouding/Downloads/glob_t',
-    [],
+    function (path, done) {
+        done();
+    },
     [{
         reg: '**'
     }],
