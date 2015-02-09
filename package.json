@@ -1,6 +1,6 @@
 {
   "name": "fis-scaffold-kernel",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "fis-scaffold-kernel",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/xiangshouding/fis-scaffold-kernel",
   "dependencies": {
-    "adm-zip": "^0.4.4",
+    "adm-zip": "0.4.4",
     "debug": "2.1.0",
     "fis-repo-client": "0.1.14",
     "glob.js": "0.1.0",
