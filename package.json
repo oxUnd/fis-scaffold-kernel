@@ -29,7 +29,7 @@
     "is-utf8": "0.2.0",
     "lodash": "2.4.1",
     "prompt": "0.2.14",
-    "tar": "^1.0.3"
+    "tar": "1.0.3"
   },
   "devDependencies": {
     "catch-output": "~0.1.1"
