@@ -113,7 +113,7 @@ Scaffold.prototype.deliver = function (from, to, roadmap) {
         var isRelease = true;
         for (var j = 0; j < map.length; j++) {
             var rule = map[j];
-            file.replace(from, '').replace(rule.reg, function () {
+            file.replace(from, '').replace(/\\/g, '/').replace(rule.reg, function () {
                 if (rule.release) {
                     release = _replaceDefine(arguments, rule.release);
                 } else {
