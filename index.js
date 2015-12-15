@@ -19,7 +19,7 @@ function Scaffold (options) {
     this.util = require('./lib/util.js');
 }
 
-Scaffold.prototype.download = function (id, cb, progress) {
+Scaffold.prototype.download = function (id, cb, progress, options) {
     log.notice('will download component id: ' + id);
     if (!id) {
         log.error(new Error('invalid, '));
@@ -31,7 +31,7 @@ Scaffold.prototype.download = function (id, cb, progress) {
     }
     var request = new (require('./lib/'+type))(this._options);
     log.notice(type + ': download start');
-    request.download(id, cb, progress);
+    request.download(id, cb, progress, options);
 };
 
 Scaffold.prototype.replace = function (path, map, use_prompt, callback) {
