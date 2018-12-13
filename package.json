@@ -21,13 +21,13 @@
   },
   "homepage": "https://github.com/xiangshouding/fis-scaffold-kernel",
   "dependencies": {
-    "adm-zip": "0.4.4",
-    "debug": "2.1.0",
+    "debug": ">=2.6.9",
+    "lodash": ">=4.17.5",
+    "adm-zip": ">=0.4.11",
     "fis-repo-client": "0.1.14",
     "glob.js": "0.1.0",
     "iconv-lite": "0.4.4",
     "is-utf8": "0.2.0",
-    "lodash": "4.12.0",
     "prompt": "0.2.14",
     "tar": "2.2.1"
   },
