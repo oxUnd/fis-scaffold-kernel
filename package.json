@@ -1,6 +1,6 @@
 {
   "name": "fis-scaffold-kernel",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "fis-scaffold-kernel",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,7 @@
     "fis-repo-client": "0.1.14",
     "glob.js": "0.1.0",
     "iconv-lite": "0.4.4",
+    "request": "2.88.0",
     "is-utf8": "0.2.0",
     "prompt": "0.2.14",
     "tar": "2.2.1"
